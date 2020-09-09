@@ -24,7 +24,7 @@ defmodule InvadersWeb.Endpoint do
     at: "/",
     from: :invaders,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css music fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

@@ -1,7 +1,10 @@
-<div class="p-4 text-center w-screen h-screen bg-black">
-  <h1 class="mt-8 text-white leading-none font-black text-8xl uppercase">Start</h1>
-  <h2 style="color: green;" class="leading-none font-black text-6xl uppercase">Game</h2>
-  <optgroup class="text-white pt-8">
+<div class="w-screen h-screen p-4 text-center bg-black">
+  <audio controls loop>
+    <source src="<%= Routes.static_path(@socket, "/music/space-invaders-theme-2002.mp4") %>" type="audio/mpeg">
+  </audio>
+  <h1 class="mt-8 font-black leading-none text-white uppercase text-8xl">Start</h1>
+  <h2 style="color: green;" class="text-6xl font-black leading-none uppercase">Game</h2>
+  <optgroup class="pt-8 text-white">
     <option class="m-4 cursor-pointer">Play Game</option>
     <option class="m-4 cursor-pointer">Exit Game</option>
   </optgroup>
