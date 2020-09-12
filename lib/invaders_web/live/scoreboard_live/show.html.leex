@@ -1,0 +1,27 @@
+<h1>Show Scoreboard</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, InvadersWeb.ScoreboardLive.FormComponent,
+    id: @scoreboard.id,
+    title: @page_title,
+    action: @live_action,
+    scoreboard: @scoreboard,
+    return_to: Routes.scoreboard_show_path(@socket, :show, @scoreboard) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @scoreboard.name %>
+  </li>
+
+  <li>
+    <strong>Score:</strong>
+    <%= @scoreboard.score %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.scoreboard_show_path(@socket, :edit, @scoreboard), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.scoreboard_index_path(@socket, :index) %></span>
