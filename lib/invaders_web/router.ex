@@ -17,8 +17,7 @@ defmodule InvadersWeb.Router do
   scope "/", InvadersWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
-    live "/home", HomeLive, :index
+    live "/", HomeLive, :index
   end
 
   # Other scopes may use custom stacks.
