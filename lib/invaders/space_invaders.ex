@@ -1,4 +1,5 @@
 # When player calls new game, redirect to new route, and spawn genserver that will record board state (player loc, enemies loc, building health, round, score)
+# https://github.com/sasa1977/erlangelist/tree/dc7cd1d2c77e52fa0a3a90f269c0f4ca8cca908b/examples/blackjack/lib
 defmodule Invaders.SpaceInvaders do
   def new,
     do:
