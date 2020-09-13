@@ -9,11 +9,11 @@ defmodule InvadersWeb.LiveHelpers do
 
   ## Examples
 
-      <%= live_modal @socket, InvadersWeb.ScoreboardLive.FormComponent,
-        id: @scoreboard.id || :new,
+      <%= live_modal @socket, InvadersWeb.ScoreLive.FormComponent,
+        id: @score.id || :new,
         action: @live_action,
-        scoreboard: @scoreboard,
-        return_to: Routes.scoreboard_index_path(@socket, :index) %>
+        score: @score,
+        return_to: Routes.score_index_path(@socket, :index) %>
   """
   def live_modal(socket, component, opts) do
     path = Keyword.fetch!(opts, :return_to)

@@ -11,6 +11,9 @@ module.exports = {
     ],
     theme: {
         extend: {
+            colors: {
+                neon: '#3aff38'
+            },
             fontFamily: {
                 sans: ['Orbitron', ...defaultTheme.fontFamily.sans],
             },

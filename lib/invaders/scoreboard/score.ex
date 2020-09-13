@@ -1,8 +1,8 @@
-defmodule Invaders.Scoreboards.Scoreboard do
+defmodule Invaders.Scoreboard.Score do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "scoreboards" do
+  schema "scores" do
     field :name, :string
     field :score, :integer
 
@@ -10,8 +10,8 @@ defmodule Invaders.Scoreboards.Scoreboard do
   end
 
   @doc false
-  def changeset(scoreboard, attrs) do
-    scoreboard
+  def changeset(score, attrs) do
+    score
     |> cast(attrs, [:name, :score])
     |> validate_required([:name, :score])
   end

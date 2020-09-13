@@ -1,0 +1,56 @@
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, InvadersWeb.ScoreLive.FormComponent,
+    id: @score.id || :new,
+    title: @page_title,
+    action: @live_action,
+    score: @score,
+    return_to: Routes.score_index_path(@socket, :index) %>
+<% end %>
+
+<div class="flex flex-col w-screen h-screen text-center bg-black">
+  <h1 class="m-8 text-4xl font-extrabold text-white">All time leadboard</h1>
+  <div class="overflow-x-auto">
+    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+      <div class="overflow-hidden border rounded-lg border-neon">
+        <table class="min-w-full divide-y divide-neon">
+          <thead>
+            <tr>
+              <th class="px-6 py-3 text-xs font-bold leading-4 tracking-wider text-left text-black uppercase bg-neon">
+                Rank
+              </th>
+              <th class="px-6 py-3 text-xs font-bold leading-4 tracking-wider text-left text-black uppercase bg-neon">
+                Name
+              </th>
+              <th class="px-6 py-3 text-xs font-bold leading-4 tracking-wider text-left text-black uppercase bg-neon">
+                Score
+              </th>
+              <th class="px-6 py-3 bg-neon"></th>
+            </tr>
+          </thead>
+          <tbody>
+          <%= for {score, rank} <- Enum.with_index(@scores, 1) do %>
+            <!-- Odd row -->
+            <tr id="score-<%= score.id %>">
+              <td class="px-6 py-4 text-sm font-bold leading-5 text-left blackspace-no-wrap text-neon">
+                <%= rank %>
+              </td>
+              <td class="px-6 py-4 text-sm font-bold leading-5 text-left blackspace-no-wrap text-neon">
+                <%= score.name %>
+              </td>
+              <td class="px-6 py-4 text-sm font-bold leading-5 text-left text-neon blackspace-no-wrap">
+                <%= score.score %>
+              </td>
+              <td class="px-6 py-4 text-sm font-medium leading-5 text-right blackspace-no-wrap">
+                <span class="text-neon hover:text-green-200"><%= live_redirect "Show", to: Routes.score_show_path(@socket, :show, score) %></span>
+                <span class="text-neon hover:text-green-200"><%= live_patch "Edit", to: Routes.score_index_path(@socket, :edit, score) %></span>
+                <span class="text-neon hover:text-green-200"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: score.id, data: [confirm: "Are you sure?"] %></span>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
