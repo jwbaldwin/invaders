@@ -9,7 +9,7 @@ defmodule InvadersWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~L"""
-     <div class="w-screen h-screen p-4 text-center bg-black">
+     <div class="w-screen h-screen p-4 text-center" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat; filter: brightness(160%); ">
       <div class="flex flex-row-reverse w-full h-12 p-4">
         <%= cond do %>
           <% @music -> %>

@@ -3,6 +3,15 @@
         <div class="text-xl uppercase">SCORE <span class="pl-4 font-bold text-neon"><%= @game.score %></span></div>
         <div class="text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon"><%= @game.lives %></span></div>
     </div>
-    <div class="flex mx-auto mt-5 border-2 border-neon" style="width:<%= @game.width %>px; height:<%= @game.height %>px;" phx-window-keyup="move">
+    <div
+    class="flex flex-col-reverse p-5 mx-auto mt-5 border-2 border-neon"
+    style="width:<%= @game.width %>px; height:<%= @game.height %>px; background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %>); background-repeat: repeat;"
+    phx-window-keyup="move">
+        <div id="ship" class="absolute w-12 -mx-6 left-1/2">
+            <img src="<%= Routes.static_path(@socket, "/images/playerShip1_green.png") %>" />
+        </div>
     </div>
 </div>
+<style>
+
+</style>
