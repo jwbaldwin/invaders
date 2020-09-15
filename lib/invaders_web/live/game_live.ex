@@ -3,7 +3,10 @@ defmodule InvadersWeb.GameLive do
 
   @left_key "ArrowLeft"
   @right_key "ArrowRight"
-  @keys [@left_key, @right_key]
+  @space_key " "
+
+  @movement_keys [@left_key, @right_key]
+  @action_keys [@space_key]
 
   @impl true
   def mount(_params, _session, socket) do
@@ -30,15 +33,25 @@ defmodule InvadersWeb.GameLive do
   end
 
   @impl true
-  def handle_event("move", %{"key" => key}, socket) when key in @keys do
+  def handle_event("move", %{"key" => key}, socket) when key in @movement_keys do
     direction = direction(key)
     IO.inspect(direction, label: "moving")
 
-    # game =
-    #   socket.assigns[:game]
-    #   |> Invaders.Game.move(direction)
+    game =
+      socket.assigns[:game]
+      |> Invaders.Game.move(direction)
 
-    # {:noreply, assign(socket, :game, game)}
+    IO.inspect(game.ship_location, label: "pos")
+    {:noreply, assign(socket, :game, game)}
+  end
+
+  def handle_event("move", %{"key" => key}, socket) when key in @action_keys do
+    IO.inspect(key, label: "Action")
+
+    game =
+      socket.assigns[:game]
+      |> Invaders.Game.fire_missile()
+
     {:noreply, socket}
   end
 

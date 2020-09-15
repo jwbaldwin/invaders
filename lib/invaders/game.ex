@@ -5,18 +5,20 @@ defmodule Invaders.Game do
   use GenServer
   require Logger
 
-  @width 600
-  @height 800
+  @width 400
+  @height 600
 
   defstruct started: false,
             pid: nil,
             game_over: false,
             win: false,
             t: 0,
-            direction: nil,
             width: @width,
             height: @height,
+            ship_location: 0,
+            ship_missiles: [],
             enemies: [],
+            enemy_missiles: [],
             tiles: [],
             bases: [],
             lives: 3,
@@ -66,18 +68,29 @@ defmodule Invaders.Game do
   end
 
   def move(pid, dir) do
-    GenServer.call(pid, {:turn, dir})
+    GenServer.call(pid, {:move, dir})
   end
 
+  @doc """
+  Fire a missile
+  """
+  def fire_missile(%__MODULE__{pid: pid}) do
+    fire_missile(pid)
+  end
+
+  def fire_missile(pid) do
+    GenServer.call(pid, {:fire_missile})
+  end
+
+  @doc """
+  Tick the game state, move aliens and missles
+  """
   def tick(game) do
     game
     |> Map.update!(:t, &(&1 + 1))
     |> gen_tiles()
   end
 
-  @doc """
-  Tick the game state, move aliens and missles
-  """
   def update(%__MODULE__{pid: pid}) do
     update(pid)
   end
@@ -91,6 +104,8 @@ defmodule Invaders.Game do
   end
 
   def handle_call(:update, _from, game) do
+    IO.inspect("Game state ticking")
+
     game =
       game
       |> tick()
@@ -99,11 +114,40 @@ defmodule Invaders.Game do
   end
 
   def handle_call({:move, direction}, _from, game) do
+    next_pos = next_pos(direction, game.ship_location)
+
     game =
       game
-      |> Map.put(:direction, direction)
+      |> Map.put(:ship_location, bounded(next_pos))
       |> start()
 
+    {:reply, game, game}
+  end
+
+  defp next_pos(direction, ship_location) do
+    case direction do
+      :left -> ship_location - 5
+      :right -> ship_location + 5
+      _ -> ship_location
+    end
+  end
+
+  @doc """
+  Bound the position between the left and right
+  """
+  defp bounded(position) do
+    cond do
+      position > div(@width, 2) -> div(@width, 2)
+      position < div(@width, 2) * -1 -> div(@width, 2) * -1
+      true -> position
+    end
+  end
+
+  @doc """
+  Add a new missile to the list, giving it the position above the player's ship
+  """
+  def handle_call({:fire_missile}, _from, game) do
+    IO.puts("pew pew")
     {:reply, game, game}
   end
 
