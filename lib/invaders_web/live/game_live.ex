@@ -26,33 +26,39 @@ defmodule InvadersWeb.GameLive do
     game = socket.assigns[:game] |> Invaders.Game.update()
 
     unless game.game_over do
-      :timer.send_after(1000, self(), :update)
+      :timer.send_after(100, self(), :update)
     end
 
     {:noreply, assign(socket, :game, game)}
   end
 
   @impl true
-  def handle_event("move", %{"key" => key}, socket) when key in @movement_keys do
-    direction = direction(key)
-    IO.inspect(direction, label: "moving")
-
-    game =
-      socket.assigns[:game]
-      |> Invaders.Game.move(direction)
-
-    IO.inspect(game.ship_location, label: "pos")
+  def handle_event("action", %{"key" => key}, socket) when key in @movement_keys do
+    game = move_ship(socket, key)
     {:noreply, assign(socket, :game, game)}
   end
 
-  def handle_event("move", %{"key" => key}, socket) when key in @action_keys do
-    IO.inspect(key, label: "Action")
+  @impl true
+  def handle_event("action", %{"key" => key}, socket) when key in @action_keys do
+    game = perform_action(socket)
+    {:noreply, assign(socket, :game, game)}
+  end
 
-    game =
-      socket.assigns[:game]
-      |> Invaders.Game.fire_missile()
-
+  @impl true
+  def handle_event("action", %{"key" => _key}, socket) do
     {:noreply, socket}
+  end
+
+  defp move_ship(socket, key) do
+    direction = direction(key)
+
+    socket.assigns[:game]
+    |> Invaders.Game.move(direction)
+  end
+
+  defp perform_action(socket) do
+    socket.assigns[:game]
+    |> Invaders.Game.fire_missile()
   end
 
   defp direction(@left_key), do: :left

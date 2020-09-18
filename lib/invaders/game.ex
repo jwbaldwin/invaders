@@ -7,6 +7,7 @@ defmodule Invaders.Game do
 
   @width 400
   @height 600
+  @middle div(@width, 2)
 
   defstruct started: false,
             pid: nil,
@@ -15,11 +16,10 @@ defmodule Invaders.Game do
             t: 0,
             width: @width,
             height: @height,
-            ship_location: 0,
+            ship_location: @middle - 20,
             ship_missiles: [],
             enemies: [],
             enemy_missiles: [],
-            tiles: [],
             bases: [],
             lives: 3,
             score: 0
@@ -39,7 +39,6 @@ defmodule Invaders.Game do
     game =
       %__MODULE__{}
       |> gen_enemies()
-      |> gen_tiles()
       |> Map.put(:pid, self())
 
     {:ok, game}
@@ -88,7 +87,7 @@ defmodule Invaders.Game do
   def tick(game) do
     game
     |> Map.update!(:t, &(&1 + 1))
-    |> gen_tiles()
+    |> move_missiles()
   end
 
   def update(%__MODULE__{pid: pid}) do
@@ -104,8 +103,6 @@ defmodule Invaders.Game do
   end
 
   def handle_call(:update, _from, game) do
-    IO.inspect("Game state ticking")
-
     game =
       game
       |> tick()
@@ -124,6 +121,22 @@ defmodule Invaders.Game do
     {:reply, game, game}
   end
 
+  @doc """
+  Add a new missile to the list, giving it the position above the player's ship
+  """
+  def handle_call({:fire_missile}, _from, game) do
+    game =
+      game
+      |> Map.put(:ship_missiles, [new_missile(game.ship_location) | game.ship_missiles])
+      |> IO.inspect()
+
+    {:reply, game, game}
+  end
+
+  defp new_missile(ship_location) do
+    {ship_location + 20, 50}
+  end
+
   defp next_pos(direction, ship_location) do
     case direction do
       :left -> ship_location - 5
@@ -132,23 +145,12 @@ defmodule Invaders.Game do
     end
   end
 
-  @doc """
-  Bound the position between the left and right
-  """
   defp bounded(position) do
     cond do
-      position > div(@width, 2) -> div(@width, 2)
-      position < div(@width, 2) * -1 -> div(@width, 2) * -1
+      position > @middle -> @middle
+      position < @middle * -1 -> @middle * -1
       true -> position
     end
-  end
-
-  @doc """
-  Add a new missile to the list, giving it the position above the player's ship
-  """
-  def handle_call({:fire_missile}, _from, game) do
-    IO.puts("pew pew")
-    {:reply, game, game}
   end
 
   def start(%{started: true} = game), do: game
@@ -169,28 +171,18 @@ defmodule Invaders.Game do
     end
   end
 
-  def win?(%{enemies: enemies}) do
-    false
-    # Map.length(enemies) == 0
+  def move_missiles(%{ship_missiles: missiles} = game) do
+    missiles =
+      missiles
+      |> Enum.map(fn {x, y} -> {x, y + 5} end)
+
+    # TODO: Refactor to remove missile if out of frame
+    Map.put(game, :ship_missiles, missiles)
   end
 
-  def gen_tiles(%{enemies: enemies, width: w, height: h} = game) do
-    tiles =
-      for x <- 0..(w - 1), y <- 0..(h - 1) do
-        cond do
-          Enum.member?(enemies, {y, x}) ->
-            :enemy
-
-          true ->
-            nil
-        end
-      end
-
-    tiles =
-      tiles
-      |> Enum.chunk_every(w)
-
-    Map.put(game, :tiles, tiles)
+  def win?(%{enemies: _enemies}) do
+    false
+    # Map.length(enemies) == 0
   end
 
   @doc """

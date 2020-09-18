@@ -4,10 +4,15 @@
         <div class="text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon"><%= @game.lives %></span></div>
     </div>
     <div
-    class="flex flex-col-reverse p-5 mx-auto mt-5 border-2 border-neon"
+    class="relative flex flex-col-reverse p-5 mx-auto mt-5 border-2 border-neon"
     style="width:<%= @game.width %>px; height:<%= @game.height %>px; background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %>); background-repeat: repeat;"
-    phx-window-keyup="move">
-        <div id="ship" class="absolute w-12 -mx-6 left-1/2">
+    phx-window-keydown="action">
+    <%= for {x, y} <- @game.ship_missiles do %>
+    <div class="absolute w-1" style="bottom:<%= y %>px; left:<%= x %>px">
+            <img class="h-3 -mx-1/4" src="<%= Routes.static_path(@socket, "/images/laserGreen02.png") %>" />
+    </div>
+    <% end %>
+        <div id="ship" class="absolute w-10 -mx-5">
             <img src="<%= Routes.static_path(@socket, "/images/playerShip1_green.png") %>" />
         </div>
     </div>
@@ -15,5 +20,10 @@
 <style>
 #ship {
     transform: translateX(<%= @game.ship_location %>px);
+}
+
+.laser {
+    margin-left: -1px;
+    margin-right: -1px;
 }
 </style>
