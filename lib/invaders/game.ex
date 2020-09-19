@@ -199,7 +199,7 @@ defmodule Invaders.Game do
         true ->
           enemies
           |> move_ships(reverse(direction))
-          |> move_ships_down(reverse(direction))
+          |> move_ships_down()
       end
 
     game
@@ -208,17 +208,22 @@ defmodule Invaders.Game do
   end
 
   defp move_ships(enemies, :right) do
-    enemies
-    |> Enum.map(fn {x, y} -> {x + @ship_speed, y} end)
+    enemies =
+      enemies
+      |> Enum.map(fn {x, y} -> {x + @ship_speed, y} end)
+
+    {enemies, :right}
   end
 
   defp move_ships(enemies, :left) do
-    enemies
-    |> Enum.map(fn {x, y} -> {x + @ship_speed * -1, y} end)
+    enemies =
+      enemies
+      |> Enum.map(fn {x, y} -> {x + @ship_speed * -1, y} end)
+
+    {enemies, :left}
   end
 
-  defp move_ships_down(enemies, direction) do
-    # TODO: make sure to end the game or something if y >= @height
+  defp move_ships_down({enemies, direction}) do
     enemies =
       enemies
       |> Enum.map(fn {x, y} -> {x, y + @enemies_down_shift} end)
