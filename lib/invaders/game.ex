@@ -10,6 +10,7 @@ defmodule Invaders.Game do
   @middle div(@width, 2)
   @missile_speed 15
   @ship_speed 5
+  @enemies_down_shift 15
 
   defstruct started: false,
             pid: nil,
@@ -21,6 +22,7 @@ defmodule Invaders.Game do
             ship_location: @middle - 20,
             ship_missiles: [],
             enemies: [],
+            enemies_direction: :right,
             enemy_missiles: [],
             bases: [],
             lives: 3,
@@ -188,14 +190,56 @@ defmodule Invaders.Game do
     |> Enum.reduce([], fn i, acc -> [{i * ship_spacing + offset, layer_spacing} | acc] end)
   end
 
-  def move_enemies(%{enemies: enemies} = game) do
-    # If the ships are moving right, and max x value is hitting the edge - reverse movement
-    # enemies =
-    #   enemies
-    #   |> Enum.map(fn {x, y} -> {x + @ship_speed, y} end)
+  def move_enemies(%{enemies: enemies, enemies_direction: direction} = game) do
+    {enemies, direction} =
+      cond do
+        can_move?(enemies, direction) ->
+          enemies |> move_ships(direction)
 
-    Map.put(game, :enemies, enemies)
+        true ->
+          enemies
+          |> move_ships(reverse(direction))
+          |> move_ships_down(reverse(direction))
+      end
+
+    game
+    |> Map.put(:enemies, enemies)
+    |> Map.put(:enemies_direction, direction)
   end
+
+  defp move_ships(enemies, :right) do
+    enemies
+    |> Enum.map(fn {x, y} -> {x + @ship_speed, y} end)
+  end
+
+  defp move_ships(enemies, :left) do
+    enemies
+    |> Enum.map(fn {x, y} -> {x + @ship_speed * -1, y} end)
+  end
+
+  defp move_ships_down(enemies, direction) do
+    # TODO: make sure to end the game or something if y >= @height
+    enemies =
+      enemies
+      |> Enum.map(fn {x, y} -> {x, y + @enemies_down_shift} end)
+
+    {enemies, direction}
+  end
+
+  defp can_move?(enemies, direction) do
+    case direction do
+      :right ->
+        {x, _y} = Enum.max(enemies)
+        x <= @width - 24
+
+      :left ->
+        {x, _y} = Enum.min(enemies)
+        x >= 20
+    end
+  end
+
+  defp reverse(:left), do: :right
+  defp reverse(:right), do: :left
 
   def move_missiles(%{ship_missiles: missiles} = game) do
     missiles =
