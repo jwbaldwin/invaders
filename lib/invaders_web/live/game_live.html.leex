@@ -4,13 +4,17 @@
         <div class="text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon"><%= @game.lives %></span></div>
     </div>
     <div
-    class="relative flex flex-col-reverse p-5 mx-auto mt-5 border-2 border-neon"
-    style="width:<%= @game.width %>px; height:<%= @game.height %>px; background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %>); background-repeat: repeat;"
+    class="relative flex flex-col-reverse p-5 mx-auto mt-5 border-2 terminal border-neon"
     phx-window-keydown="action">
+    <%= for {x, y} <- @game.enemies do %>
+        <div class="absolute w-6 -mx-3 enemy" style="top:<%= y %>px; left:<%= x %>px">
+            <img src="<%= Routes.static_path(@socket, "/images/enemyBlack1.png") %>" />
+        </div>
+    <% end %>
     <%= for {x, y} <- @game.ship_missiles do %>
-    <div class="absolute w-1" style="bottom:<%= y %>px; left:<%= x %>px">
+        <div class="absolute w-1" style="top:<%= y %>px; left:<%= x %>px">
             <img class="h-3 -mx-1/4" src="<%= Routes.static_path(@socket, "/images/laserGreen02.png") %>" />
-    </div>
+        </div>
     <% end %>
         <div id="ship" class="absolute w-10 -mx-5">
             <img src="<%= Routes.static_path(@socket, "/images/playerShip1_green.png") %>" />
@@ -18,6 +22,13 @@
     </div>
 </div>
 <style>
+.terminal {
+    width:<%= @game.width %>px;
+    height:<%= @game.height %>px;
+    background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %>);
+    background-repeat: repeat;
+}
+
 #ship {
     transform: translateX(<%= @game.ship_location %>px);
 }

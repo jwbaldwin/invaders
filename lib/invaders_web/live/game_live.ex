@@ -26,7 +26,7 @@ defmodule InvadersWeb.GameLive do
     game = socket.assigns[:game] |> Invaders.Game.update()
 
     unless game.game_over do
-      :timer.send_after(100, self(), :update)
+      :timer.send_after(50, self(), :update)
     end
 
     {:noreply, assign(socket, :game, game)}

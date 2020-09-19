@@ -8,6 +8,8 @@ defmodule Invaders.Game do
   @width 400
   @height 600
   @middle div(@width, 2)
+  @missile_speed 15
+  @ship_speed 5
 
   defstruct started: false,
             pid: nil,
@@ -87,6 +89,7 @@ defmodule Invaders.Game do
   def tick(game) do
     game
     |> Map.update!(:t, &(&1 + 1))
+    |> move_enemies()
     |> move_missiles()
   end
 
@@ -128,27 +131,28 @@ defmodule Invaders.Game do
     game =
       game
       |> Map.put(:ship_missiles, [new_missile(game.ship_location) | game.ship_missiles])
-      |> IO.inspect()
 
     {:reply, game, game}
   end
 
   defp new_missile(ship_location) do
-    {ship_location + 20, 50}
+    {ship_location + 20, @height - 50}
   end
 
   defp next_pos(direction, ship_location) do
     case direction do
-      :left -> ship_location - 5
-      :right -> ship_location + 5
+      :left -> ship_location - @ship_speed
+      :right -> ship_location + @ship_speed
       _ -> ship_location
     end
   end
 
   defp bounded(position) do
+    adjustment = 20
+
     cond do
-      position > @middle -> @middle
-      position < @middle * -1 -> @middle * -1
+      position > @width - adjustment -> @width - adjustment
+      position < 0 - adjustment -> 0 - adjustment
       true -> position
     end
   end
@@ -167,16 +171,38 @@ defmodule Invaders.Game do
     if win?(game) do
       Map.merge(game, %{game_over: true, win: true, enemies: []})
     else
-      Map.put(game, :enemies, [])
+      generated_enemies =
+        1..2
+        |> Enum.reduce([], fn layer, acc -> gen_layer(layer) ++ acc end)
+
+      Map.put(game, :enemies, generated_enemies)
     end
+  end
+
+  defp gen_layer(layer) do
+    ship_spacing = 40
+    layer_spacing = layer * 40
+    offset = layer * 20
+
+    1..5
+    |> Enum.reduce([], fn i, acc -> [{i * ship_spacing + offset, layer_spacing} | acc] end)
+  end
+
+  def move_enemies(%{enemies: enemies} = game) do
+    # If the ships are moving right, and max x value is hitting the edge - reverse movement
+    # enemies =
+    #   enemies
+    #   |> Enum.map(fn {x, y} -> {x + @ship_speed, y} end)
+
+    Map.put(game, :enemies, enemies)
   end
 
   def move_missiles(%{ship_missiles: missiles} = game) do
     missiles =
       missiles
-      |> Enum.map(fn {x, y} -> {x, y + 5} end)
+      |> Enum.filter(fn {_x, y} -> y - @missile_speed >= 0 end)
+      |> Enum.map(fn {x, y} -> {x, y - @missile_speed} end)
 
-    # TODO: Refactor to remove missile if out of frame
     Map.put(game, :ship_missiles, missiles)
   end
 
