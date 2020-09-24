@@ -43,7 +43,7 @@ defmodule Invaders.Game do
     game =
       %__MODULE__{}
       |> gen_enemies()
-      |> Map.put(:pid, self())
+      |> Map.replace!(:pid, self())
 
     {:ok, game}
   end
@@ -93,6 +93,7 @@ defmodule Invaders.Game do
     |> Map.update!(:t, &(&1 + 1))
     |> move_enemies()
     |> move_missiles()
+    |> detect_collisions()
   end
 
   def update(%__MODULE__{pid: pid}) do
@@ -120,7 +121,7 @@ defmodule Invaders.Game do
 
     game =
       game
-      |> Map.put(:ship_location, bounded(next_pos))
+      |> Map.replace!(:ship_location, bounded(next_pos))
       |> start()
 
     {:reply, game, game}
@@ -132,7 +133,7 @@ defmodule Invaders.Game do
   def handle_call({:fire_missile}, _from, game) do
     game =
       game
-      |> Map.put(:ship_missiles, [new_missile(game.ship_location) | game.ship_missiles])
+      |> Map.replace!(:ship_missiles, [new_missile(game.ship_location) | game.ship_missiles])
 
     {:reply, game, game}
   end
@@ -165,7 +166,7 @@ defmodule Invaders.Game do
     Logger.debug("Game started: #{inspect(game.pid)}")
 
     game
-    |> Map.put(:started, true)
+    |> Map.replace!(:started, true)
     |> tick()
   end
 
@@ -177,7 +178,7 @@ defmodule Invaders.Game do
         1..2
         |> Enum.reduce([], fn layer, acc -> gen_layer(layer) ++ acc end)
 
-      Map.put(game, :enemies, generated_enemies)
+      Map.replace!(game, :enemies, generated_enemies)
     end
   end
 
@@ -203,8 +204,8 @@ defmodule Invaders.Game do
       end
 
     game
-    |> Map.put(:enemies, enemies)
-    |> Map.put(:enemies_direction, direction)
+    |> Map.replace!(:enemies, enemies)
+    |> Map.replace!(:enemies_direction, direction)
   end
 
   defp move_ships(enemies, :right) do
@@ -252,7 +253,48 @@ defmodule Invaders.Game do
       |> Enum.filter(fn {_x, y} -> y - @missile_speed >= 0 end)
       |> Enum.map(fn {x, y} -> {x, y - @missile_speed} end)
 
-    Map.put(game, :ship_missiles, missiles)
+    Map.replace!(game, :ship_missiles, missiles)
+  end
+
+  @doc """
+  This will determine if a ship missile hits and enemy
+  """
+  def detect_collisions(%{ship_missiles: [], enemies: _enemies} = game),
+    do: game
+
+  def detect_collisions(%{ship_missiles: missiles, enemies: enemies} = game) do
+    hits =
+      Enum.reduce(enemies, %{enemies: [], missiles: []}, fn enemy, hits ->
+        Enum.reduce(missiles, hits, fn missile, hits ->
+          case is_hit?(enemy, missile) do
+            true ->
+              hits
+              |> Map.put(:enemies, [enemy | hits.enemies])
+              |> Map.put(:missiles, [missile | hits.missiles])
+
+            false ->
+              hits
+          end
+        end)
+      end)
+
+    game
+    |> remove_collisions(hits)
+  end
+
+  defp remove_collisions(game, %{enemies: [], missiles: []}), do: game
+
+  defp remove_collisions(game, %{enemies: enemies, missiles: missiles}) do
+    game
+    |> Map.replace!(:enemies, Enum.reject(game.enemies, &Enum.member?(enemies, &1)))
+    |> Map.replace!(:ship_missiles, Enum.reject(game.ship_missiles, &Enum.member?(missiles, &1)))
+  end
+
+  defp is_hit?({enemy_x, enemy_y}, {missile_x, missile_y}) do
+    x_range = (enemy_x - 10)..(enemy_x + 10)
+    y_range = (enemy_y - 12)..(enemy_y + 12)
+
+    Enum.member?(x_range, missile_x) && Enum.member?(y_range, missile_y)
   end
 
   def win?(%{enemies: _enemies}) do
