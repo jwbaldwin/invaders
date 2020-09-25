@@ -8,9 +8,12 @@ defmodule Invaders.Game do
   @width 400
   @height 600
   @middle div(@width, 2)
-  @missile_speed 15
-  @ship_speed 5
-  @enemies_down_shift 15
+  @missile_speed 30
+  @ship_speed 8
+  @enemy_speed 1
+  @enemies_down_shift 5
+  @layers 4
+  @ships_per_layer 11
 
   defstruct started: false,
             pid: nil,
@@ -22,6 +25,7 @@ defmodule Invaders.Game do
             ship_location: @middle - 20,
             ship_missiles: [],
             enemies: [],
+            hits: [],
             enemies_direction: :right,
             enemy_missiles: [],
             bases: [],
@@ -91,6 +95,8 @@ defmodule Invaders.Game do
   def tick(game) do
     game
     |> Map.update!(:t, &(&1 + 1))
+    # clear out explosions
+    |> Map.replace!(:hits, [])
     |> move_enemies()
     |> move_missiles()
     |> detect_collisions()
@@ -175,7 +181,7 @@ defmodule Invaders.Game do
       Map.merge(game, %{game_over: true, win: true, enemies: []})
     else
       generated_enemies =
-        1..2
+        1..@layers
         |> Enum.reduce([], fn layer, acc -> gen_layer(layer) ++ acc end)
 
       Map.replace!(game, :enemies, generated_enemies)
@@ -183,12 +189,11 @@ defmodule Invaders.Game do
   end
 
   defp gen_layer(layer) do
-    ship_spacing = 40
+    ship_spacing = 30
     layer_spacing = layer * 40
-    offset = layer * 20
 
-    1..5
-    |> Enum.reduce([], fn i, acc -> [{i * ship_spacing + offset, layer_spacing} | acc] end)
+    1..@ships_per_layer
+    |> Enum.reduce([], fn i, acc -> [{i * ship_spacing, layer_spacing} | acc] end)
   end
 
   def move_enemies(%{enemies: enemies, enemies_direction: direction} = game) do
@@ -211,7 +216,7 @@ defmodule Invaders.Game do
   defp move_ships(enemies, :right) do
     enemies =
       enemies
-      |> Enum.map(fn {x, y} -> {x + @ship_speed, y} end)
+      |> Enum.map(fn {x, y} -> {x + @enemy_speed, y} end)
 
     {enemies, :right}
   end
@@ -219,7 +224,7 @@ defmodule Invaders.Game do
   defp move_ships(enemies, :left) do
     enemies =
       enemies
-      |> Enum.map(fn {x, y} -> {x + @ship_speed * -1, y} end)
+      |> Enum.map(fn {x, y} -> {x + @enemy_speed * -1, y} end)
 
     {enemies, :left}
   end
@@ -288,18 +293,22 @@ defmodule Invaders.Game do
     game
     |> Map.replace!(:enemies, Enum.reject(game.enemies, &Enum.member?(enemies, &1)))
     |> Map.replace!(:ship_missiles, Enum.reject(game.ship_missiles, &Enum.member?(missiles, &1)))
+    |> Map.replace!(:hits, enemies)
+    |> Map.replace!(:score, game.score + 10 * length(missiles))
   end
 
   defp is_hit?({enemy_x, enemy_y}, {missile_x, missile_y}) do
-    x_range = (enemy_x - 10)..(enemy_x + 10)
-    y_range = (enemy_y - 12)..(enemy_y + 12)
+    x_range = (enemy_x - 14)..(enemy_x + 14)
+    y_range = (enemy_y - 16)..(enemy_y + 16)
 
     Enum.member?(x_range, missile_x) && Enum.member?(y_range, missile_y)
   end
 
-  def win?(%{enemies: _enemies}) do
-    false
-    # Map.length(enemies) == 0
+  def win?(%{enemies: enemies, t: t}) do
+    case t do
+      0 -> false
+      _ -> length(enemies) == 0
+    end
   end
 
   @doc """

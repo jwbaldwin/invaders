@@ -1,14 +1,22 @@
-<div class="h-screen bg-black">
+<div class="h-screen bg-black"
+    phx-window-keydown="fire"
+    phx-throttle="300">
     <div class="flex justify-around w-full px-32 pt-8 text-white">
         <div class="text-xl uppercase">SCORE <span class="pl-4 font-bold text-neon"><%= @game.score %></span></div>
         <div class="text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon"><%= @game.lives %></span></div>
     </div>
     <div
     class="relative flex flex-col-reverse p-5 mx-auto mt-5 border-2 terminal border-neon"
-    phx-window-keydown="action">
+    phx-window-keydown="move"
+    phx-throttle="10">
     <%= for {x, y} <- @game.enemies do %>
         <div class="absolute w-6 -mx-3 enemy" style="top:<%= y %>px; left:<%= x %>px">
             <img src="<%= Routes.static_path(@socket, "/images/enemyBlack1.png") %>" />
+        </div>
+    <% end %>
+    <%= for {x, y} <- @game.hits do %>
+        <div class="absolute w-6 -mx-3 enemy" style="top:<%= y %>px; left:<%= x %>px">
+            <img src="<%= Routes.static_path(@socket, "/images/laserGreen14.png") %>" />
         </div>
     <% end %>
     <%= for {x, y} <- @game.ship_missiles do %>
@@ -20,6 +28,11 @@
             <img src="<%= Routes.static_path(@socket, "/images/playerShip1_green.png") %>" />
         </div>
     </div>
+    <%= cond do %>
+        <%= @play_sound -> %>
+        <audio autoplay src="<%= Routes.static_path(@socket, "/music/sfx_laser1.ogg") %>" type="audio/ogg" id="audio"></audio>
+        <%= true -> %>
+    <% end %>
 </div>
 <style>
 .terminal {

@@ -14,7 +14,7 @@ defmodule InvadersWeb.GameLive do
 
     socket =
       socket
-      |> assign(:game, game)
+      |> assign(%{game: game, play_sound: false})
 
     handle_info(:update, socket)
 
@@ -33,19 +33,32 @@ defmodule InvadersWeb.GameLive do
   end
 
   @impl true
-  def handle_event("action", %{"key" => key}, socket) when key in @movement_keys do
+  def handle_info(:reset, socket) do
+    {:noreply, assign(socket, :play_sound, false)}
+  end
+
+  @impl true
+  def handle_event("move", %{"key" => key}, socket) when key in @movement_keys do
     game = move_ship(socket, key)
     {:noreply, assign(socket, :game, game)}
   end
 
   @impl true
-  def handle_event("action", %{"key" => key}, socket) when key in @action_keys do
+  def handle_event("fire", %{"key" => key}, socket) when key in @action_keys do
     game = perform_action(socket)
-    {:noreply, assign(socket, :game, game)}
+
+    :timer.send_after(300, self(), :reset)
+
+    {:noreply, assign(socket, %{game: game, play_sound: true})}
   end
 
   @impl true
-  def handle_event("action", %{"key" => _key}, socket) do
+  def handle_event("move", %{"key" => _key}, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("fire", %{"key" => _key}, socket) do
     {:noreply, socket}
   end
 
