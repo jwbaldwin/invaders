@@ -12,10 +12,12 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                neon: '#3aff38'
+                'neon-green': '#00d13e',
+                'neon-yellow': '#eab300',
+                'neon-orange': '#de5e00'
             },
             fontFamily: {
-                sans: ['Orbitron', ...defaultTheme.fontFamily.sans],
+                sans: ['VT323', ...defaultTheme.fontFamily.sans],
             },
             fontSize: {
                 '8xl': '6rem',

@@ -27,15 +27,37 @@ defmodule InvadersWeb.HomeLive do
           <% true -> %>
         <% end %>
       </div>
-      <h1 class="mt-8 font-black leading-none text-white uppercase text-8xl">Sphxace</h1>
-      <h2 class="text-6xl font-black leading-none uppercase text-neon">Invaders</h2>
+      <div class="relative flex justify-around w-full h-36 parent">
+        <div class="-my-4 slant text-neon-orange">
+          <h1 class="my-1 font-black leading-none uppercase text-8xl">Sphxace</h1>
+          <h2 class="text-6xl font-black leading-none uppercase">Invaders</h2>
+        </div>
+        <div class="-my-1.5 slant text-neon-yellow">
+          <h1 class="my-1 font-black leading-none uppercase text-8xl">Sphxace</h1>
+          <h2 class="text-6xl font-black leading-none uppercase">Invaders</h2>
+        </div>
+        <div class="my-1 slant text-neon-green">
+          <h1 class="my-1 font-black leading-none uppercase text-8xl">Sphxace</h1>
+          <h2 class="text-6xl font-black leading-none uppercase">Invaders</h2>
+        </div>
+      </div>
       <div class="flex flex-col mt-8 text-xl text-white">
-        <button phx-click="new" class="m-4 mx-auto cursor-pointer hover:text-neon focus:text-neon">Play Game</button>
-        <span class="m-4 cursor-pointer hover:text-neon focus:text-green-200">
+        <button phx-click="new" class="m-4 mx-auto cursor-pointer hover:text-neon-greenfocus:text-neon">Play Game</button>
+        <span class="m-4 cursor-pointer hover:text-neon-greenfocus:text-green-200">
           <%= live_redirect "Scoreboard", to: Routes.score_index_path(@socket, :index), class: "focus:text-neon" %>
         </span>
       </div>
     </div>
+    <style>
+    .parent {
+      perspective: 100px;
+    }
+    .slant {
+      position: absolute;
+      transform: rotateX(-5deg);
+      text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000;
+    }
+    </style>
     """
   end
 

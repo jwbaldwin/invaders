@@ -38,13 +38,13 @@
               <td class="px-6 py-4 text-sm font-bold leading-5 text-left blackspace-no-wrap text-neon">
                 <%= score.name %>
               </td>
-              <td class="px-6 py-4 text-sm font-bold leading-5 text-left text-neon blackspace-no-wrap">
+              <td class="px-6 py-4 text-sm font-bold leading-5 text-left text-neon-greenblackspace-no-wrap">
                 <%= score.score %>
               </td>
               <td class="px-6 py-4 text-sm font-medium leading-5 text-right blackspace-no-wrap">
-                <span class="text-neon hover:text-green-200"><%= live_redirect "Show", to: Routes.score_show_path(@socket, :show, score) %></span>
-                <span class="text-neon hover:text-green-200"><%= live_patch "Edit", to: Routes.score_index_path(@socket, :edit, score) %></span>
-                <span class="text-neon hover:text-green-200"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: score.id, data: [confirm: "Are you sure?"] %></span>
+                <span class="text-neon-greenhover:text-green-200"><%= live_redirect "Show", to: Routes.score_show_path(@socket, :show, score) %></span>
+                <span class="text-neon-greenhover:text-green-200"><%= live_patch "Edit", to: Routes.score_index_path(@socket, :edit, score) %></span>
+                <span class="text-neon-greenhover:text-green-200"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: score.id, data: [confirm: "Are you sure?"] %></span>
               </td>
             </tr>
             <% end %>
