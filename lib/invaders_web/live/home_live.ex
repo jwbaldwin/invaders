@@ -27,24 +27,28 @@ defmodule InvadersWeb.HomeLive do
           <% true -> %>
         <% end %>
       </div>
+      <div class="flex justify-around text-neon-green">
+        <div class="my-1 text-2xl font-black leading-none uppercase">Hi-Score</div>
+        <div class="my-1 text-2xl font-black leading-none uppercase"><%= Invaders.Scoreboard.get_high_score!().score %></div>
+      </div>
       <div class="relative flex justify-around w-full h-36 parent">
         <div class="-my-4 slant text-neon-orange">
-          <h1 class="my-1 font-black leading-none uppercase text-8xl">Sphxace</h1>
-          <h2 class="text-6xl font-black leading-none uppercase">Invaders</h2>
+          <h1 class="my-1 font-black leading-none uppercase text-10xl">Sphxace</h1>
+          <h2 class="font-black leading-none uppercase text-8xl">Invaders</h2>
         </div>
         <div class="-my-1.5 slant text-neon-yellow">
-          <h1 class="my-1 font-black leading-none uppercase text-8xl">Sphxace</h1>
-          <h2 class="text-6xl font-black leading-none uppercase">Invaders</h2>
+          <h1 class="my-1 font-black leading-none uppercase text-10xl">Sphxace</h1>
+          <h2 class="font-black leading-none uppercase text-8xl">Invaders</h2>
         </div>
         <div class="my-1 slant text-neon-green">
-          <h1 class="my-1 font-black leading-none uppercase text-8xl">Sphxace</h1>
-          <h2 class="text-6xl font-black leading-none uppercase">Invaders</h2>
+          <h1 class="my-1 font-black leading-none uppercase text-10xl">Sphxace</h1>
+          <h2 class="font-black leading-none uppercase text-8xl">Invaders</h2>
         </div>
       </div>
-      <div class="flex flex-col mt-8 text-xl text-white">
-        <button phx-click="new" class="m-4 mx-auto cursor-pointer hover:text-neon-greenfocus:text-neon">Play Game</button>
-        <span class="m-4 cursor-pointer hover:text-neon-greenfocus:text-green-200">
-          <%= live_redirect "Scoreboard", to: Routes.score_index_path(@socket, :index), class: "focus:text-neon" %>
+      <div class="flex flex-col mt-24 text-4xl text-white">
+        <button phx-click="new" class="m-4 mx-auto cursor-pointer hover:text-neon-green focus:text-neon-green">Play Game</button>
+        <span class="m-2 cursor-pointer hover:text-neon-yellow focus:text-neon-yellow">
+          <%= live_redirect "Scoreboard", to: Routes.score_index_path(@socket, :index), class: "focus:text-neon-green" %>
         </span>
       </div>
     </div>

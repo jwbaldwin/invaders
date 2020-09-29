@@ -25,7 +25,10 @@ defmodule InvadersWeb.GameLive do
   def handle_info(:update, socket) do
     game = socket.assigns[:game] |> Invaders.Game.update()
 
-    unless game.game_over do
+    if game.game_over do
+      # TODO: open modal that says yay u won and add your name and score
+      IO.puts("game won yay")
+    else
       :timer.send_after(50, self(), :update)
     end
 

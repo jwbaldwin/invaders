@@ -197,20 +197,24 @@ defmodule Invaders.Game do
   end
 
   def move_enemies(%{enemies: enemies, enemies_direction: direction} = game) do
-    {enemies, direction} =
-      cond do
-        can_move?(enemies, direction) ->
-          enemies |> move_ships(direction)
+    if win?(game) do
+      Map.merge(game, %{game_over: true, win: true, enemies: []})
+    else
+      {enemies, direction} =
+        cond do
+          can_move?(enemies, direction) ->
+            enemies |> move_ships(direction)
 
-        true ->
-          enemies
-          |> move_ships(reverse(direction))
-          |> move_ships_down()
-      end
+          true ->
+            enemies
+            |> move_ships(reverse(direction))
+            |> move_ships_down()
+        end
 
-    game
-    |> Map.replace!(:enemies, enemies)
-    |> Map.replace!(:enemies_direction, direction)
+      game
+      |> Map.replace!(:enemies, enemies)
+      |> Map.replace!(:enemies_direction, direction)
+    end
   end
 
   defp move_ships(enemies, :right) do

@@ -24,6 +24,27 @@ defmodule Invaders.Scoreboard do
   end
 
   @doc """
+  Gets a the high score.
+
+  Raises `Ecto.NoResultsError` one does not exist
+
+  ## Examples
+
+      iex> get_high_score!()
+      %Score{}
+
+      iex> get_high_score!()
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_high_score!() do
+    Score
+    |> order_by(desc: :score)
+    |> limit(1)
+    |> Repo.one!()
+  end
+
+  @doc """
   Gets a single score.
 
   Raises `Ecto.NoResultsError` if the Score does not exist.

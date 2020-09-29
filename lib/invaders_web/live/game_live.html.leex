@@ -1,12 +1,16 @@
-<div class="h-screen bg-black"
+<div class="h-screen" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat;"
     phx-window-keydown="fire"
     phx-throttle="300">
-    <div class="flex justify-around w-full px-32 pt-8 text-white">
-        <div class="text-xl uppercase">SCORE <span class="pl-4 font-bold text-neon"><%= @game.score %></span></div>
-        <div class="text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon"><%= @game.lives %></span></div>
+    <div class="flex justify-around w-full px-32 pt-4 text-white">
+        <span class="flex-1 text-xl font-bold text-white transform hover:scale-110">
+        <%= live_redirect to: Routes.home_path(@socket, :index) do %>&#8592; Home<% end %>
+        </span>
+        <div class="mr-12 text-xl uppercase">SCORE <span class="pl-4 font-bold text-neon-green"><%= @game.score %></span></div>
+        <div class="ml-12 text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon-green"><%= @game.lives %></span></div>
+        <div class="flex-1"></div>
     </div>
     <div
-    class="relative flex flex-col-reverse p-5 mx-auto mt-5 border-2 terminal border-neon"
+    class="relative flex flex-col-reverse p-5 mx-auto mt-5 bg-black border-2 terminal border-neon"
     phx-window-keydown="move"
     phx-throttle="10">
     <%= for {x, y} <- @game.enemies do %>
@@ -38,8 +42,6 @@
 .terminal {
     width:<%= @game.width %>px;
     height:<%= @game.height %>px;
-    background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %>);
-    background-repeat: repeat;
 }
 
 #ship {
