@@ -52,8 +52,7 @@ defmodule InvadersWeb.HomeLive do
         </span>
       </div>
       <div class="absolute flex justify-around w-full mx-auto text-white bottom-10">
-      Twitter - Github
-      </div>
+        <a class="hover:text-green" href="https://twitter.com/jwbaldwin_">Twitter</a> - <a class="hover:text-yellow" href="https://github.com/jwbaldwin">Github</a></div>
     </div>
     <style>
     .parent {
