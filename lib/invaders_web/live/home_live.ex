@@ -51,6 +51,8 @@ defmodule InvadersWeb.HomeLive do
           <%= live_redirect "Scoreboard", to: Routes.score_index_path(@socket, :index), class: "focus:text-neon-green" %>
         </span>
       </div>
+      <div class="absolute flex justify-around w-full mx-auto text-white bottom-10">
+        <a class="hover:text-green" href="https://twitter.com/jwbaldwin_">Twitter</a> - <a class="hover:text-yellow" href="https://github.com/jwbaldwin">Github</a></div>
     </div>
     <style>
     .parent {
