@@ -1,0 +1,62 @@
+<%= if !@game.game_over do %>
+  <%= live_modal @socket, InvadersWeb.GameLive.GameOverComponent,
+    id: @game.pid,
+    action: @live_action,
+    game_ending_text: "Game over",
+    return_to: Routes.home_path(@socket, :index) %>
+<% end %>
+<div class="h-screen" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat;"
+    phx-window-keydown="fire"
+    phx-throttle="300">
+    <div class="flex justify-around w-full px-32 pt-4 text-white">
+        <span class="flex-1 text-xl font-bold text-white transform hover:scale-110">
+        <%= live_redirect to: Routes.home_path(@socket, :index) do %>&#8592; Home<% end %>
+        </span>
+        <div class="mr-12 text-xl uppercase">SCORE <span class="pl-4 font-bold text-neon-green"><%= @game.score %></span></div>
+        <div class="ml-12 text-xl uppercase">LIVES <span class="pl-4 font-bold text-neon-green"><%= @game.lives %></span></div>
+        <div class="flex-1"></div>
+    </div>
+    <div
+    class="relative flex flex-col-reverse p-5 mx-auto mt-5 bg-black border-2 terminal border-neon"
+    phx-window-keydown="move"
+    phx-throttle="10">
+    <%= for {x, y} <- @game.enemies do %>
+        <div class="absolute w-6 -mx-3 enemy" style="top:<%= y %>px; left:<%= x %>px">
+            <img src="<%= Routes.static_path(@socket, "/images/enemyBlack1.png") %>" />
+        </div>
+    <% end %>
+    <%= for {x, y} <- @game.hits do %>
+        <div class="absolute w-6 -mx-3 enemy" style="top:<%= y %>px; left:<%= x %>px">
+            <img src="<%= Routes.static_path(@socket, "/images/laserGreen14.png") %>" />
+        </div>
+    <% end %>
+    <%= for {x, y} <- @game.ship_missiles do %>
+        <div class="absolute w-1" style="top:<%= y %>px; left:<%= x %>px">
+            <img class="h-3 -mx-1/4" src="<%= Routes.static_path(@socket, "/images/laserGreen02.png") %>" />
+        </div>
+    <% end %>
+        <div id="ship" class="absolute w-10 -mx-5">
+            <img src="<%= Routes.static_path(@socket, "/images/playerShip1_green.png") %>" />
+        </div>
+    </div>
+    <%= cond do %>
+        <%= @play_sound -> %>
+        <audio autoplay src="<%= Routes.static_path(@socket, "/music/sfx_laser1.ogg") %>" type="audio/ogg" id="audio"></audio>
+        <%= true -> %>
+    <% end %>
+</div>
+<style>
+.terminal {
+    width:<%= @game.width %>px;
+    height:<%= @game.height %>px;
+}
+
+#ship {
+    transform: translateX(<%= @game.ship_location %>px);
+}
+
+.laser {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+</style>
