@@ -9,7 +9,7 @@ defmodule InvadersWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~L"""
-     <div class="w-screen h-screen p-4 text-center" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat;">
+     <div class="w-screen h-screen text-center" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat;">
       <div class="flex flex-row-reverse w-full h-12 p-4">
         <%= cond do %>
           <% @music -> %>
@@ -46,13 +46,20 @@ defmodule InvadersWeb.HomeLive do
         </div>
       </div>
       <div class="flex flex-col mt-24 text-4xl text-white">
-        <button phx-click="new" class="m-4 mx-auto cursor-pointer hover:text-neon-green focus:text-neon-green">Play Game</button>
+        <span class="m-4 mx-auto cursor-pointer hover:text-neon-green focus:text-neon-green">
+          <%= live_redirect "Play Game", to: Routes.game_path(@socket, :index), class: "focus:text-neon-green" %>
+        </span>
         <span class="m-2 cursor-pointer hover:text-neon-yellow focus:text-neon-yellow">
           <%= live_redirect "Scoreboard", to: Routes.score_index_path(@socket, :index), class: "focus:text-neon-green" %>
         </span>
       </div>
-      <div class="absolute flex justify-around w-full mx-auto text-white bottom-10">
-        <a class="hover:text-green" href="https://twitter.com/jwbaldwin_">Twitter</a> - <a class="hover:text-yellow" href="https://github.com/jwbaldwin">Github</a></div>
+      <div class="absolute flex justify-center w-full text-white bottom-10">
+        <span>Made by
+        <a class="hover:text-neon-green hover:underline" href="https://www.jwbaldwin.com">jwbaldwin</a>.
+        Find me at
+        <a class="hover:text-neon-yellow hover:underline" href="https://twitter.com/jwbaldwin_">Twitter</a> -
+        <a class="hover:text-neon-orange hover:underline" href="https://github.com/jwbaldwin">Github</a>
+      </div>
     </div>
     <style>
     .parent {
