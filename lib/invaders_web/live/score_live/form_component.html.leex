@@ -1,18 +1,41 @@
-<h2><%= @title %></h2>
-
+<div class="pb-5 sm:flex sm:items-start">
+  <div class="w-full mt-3 text-center">
+    <h3 class="text-6xl leading-6 text-gray-100">Game Over</h3>
+  </div>
+</div>
 <%= f = form_for @changeset, "#",
   id: "score-form",
   phx_target: @myself,
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
+  <div class="flex justify-around">
+    <!--
+      Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
+      Read the documentation to get started: https://tailwindui.com/documentation
+    -->
+    <div>
+      <%= label f, :name, [class: "text-xl block font-medium leading-5 text-gray-200"] %>
+      <div class="relative mt-1 rounded-md">
+        <%= text_input f, :name, [class: "text-2xl w-24 block bg-gray-700 border-2 border-gray-700 text-neon-green placeholder-gray-400 form-input focus:shadow-outline"] %>
+      </div>
+      <p class="mt-2 text-sm text-red-600" id="email-error">
+        <%= error_tag f, :name %>
+      </p>
+    </div>
 
-  <%= label f, :score %>
-  <%= number_input f, :score %>
-  <%= error_tag f, :score %>
 
-  <%= submit "Save", phx_disable_with: "Saving..." %>
+    <div class="flex flex-col">
+      <%= label f, :score, [class: "text-white text-xl"] %>
+      <p class="text-4xl text-neon-green">
+        <%= @score.score %>
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+      <span class="flex w-40 mx-auto mt-3 rounded-md shadow-sm">
+        <%= submit "Save game", phx_disable_with: "Saving...", class: "w-full px-4 py-2 border-4 border-neon-green hover:border-neon-orange text-2xl leading-6 text-black transition duration-150 ease-in-out rounded-md shadow-sm bg-neon-green focus:outline-none focus:shadow-outline sm:leading-5" %>
+      </span>
+  </div>
 </form>

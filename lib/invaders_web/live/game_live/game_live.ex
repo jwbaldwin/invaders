@@ -1,6 +1,8 @@
 defmodule InvadersWeb.GameLive do
   use InvadersWeb, :live_view
 
+  alias Invaders.Scoreboard.Score
+
   @left_key "ArrowLeft"
   @right_key "ArrowRight"
   @space_key " "
@@ -26,8 +28,9 @@ defmodule InvadersWeb.GameLive do
     game = socket.assigns[:game] |> Invaders.Game.update()
 
     if game.game_over do
-      # TODO: open modal that says yay u won and add your name and score
       IO.puts("game won yay")
+      # TODO: open modal that says yay u won and add your name and score
+      {:noreply, push_patch(socket, to: "/game/new")}
     else
       :timer.send_after(50, self(), :update)
     end
@@ -63,6 +66,21 @@ defmodule InvadersWeb.GameLive do
   @impl true
   def handle_event("fire", %{"key" => _key}, socket) do
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :new, _params) do
+    IO.puts("new")
+
+    score = %Score{score: socket.assigns.game.score}
+
+    socket
+    |> assign(:page_title, "Game Over")
+    |> assign(:score, score)
   end
 
   defp move_ship(socket, key) do

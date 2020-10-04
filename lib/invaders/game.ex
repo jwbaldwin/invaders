@@ -17,7 +17,7 @@ defmodule Invaders.Game do
 
   defstruct started: false,
             pid: nil,
-            game_over: false,
+            game_over: true,
             win: false,
             t: 0,
             width: @width,

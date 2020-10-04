@@ -27,20 +27,9 @@ defmodule InvadersWeb.ScoreLive.FormComponent do
     save_score(socket, socket.assigns.action, score_params)
   end
 
-  defp save_score(socket, :edit, score_params) do
-    case Scoreboard.update_score(socket.assigns.score, score_params) do
-      {:ok, _score} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Score updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
-  end
-
   defp save_score(socket, :new, score_params) do
+    IO.inspect(score_params)
+
     case Scoreboard.create_score(score_params) do
       {:ok, _score} ->
         {:noreply,

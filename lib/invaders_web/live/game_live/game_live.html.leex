@@ -1,8 +1,8 @@
-<%= if !@game.game_over do %>
-  <%= live_modal @socket, InvadersWeb.GameLive.GameOverComponent,
-    id: @game.pid,
+<%= if @game.game_over do %>
+  <%= live_modal @socket, InvadersWeb.ScoreLive.FormComponent,
+    id: :new,
     action: @live_action,
-    game_ending_text: "Game over",
+    score: @score,
     return_to: Routes.home_path(@socket, :index) %>
 <% end %>
 <div class="h-screen" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat;"
@@ -42,7 +42,7 @@
     <%= cond do %>
         <%= @play_sound -> %>
         <audio autoplay src="<%= Routes.static_path(@socket, "/music/sfx_laser1.ogg") %>" type="audio/ogg" id="audio"></audio>
-        <%= true -> %>
+        <% true -> %>
     <% end %>
 </div>
 <style>
