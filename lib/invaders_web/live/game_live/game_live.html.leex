@@ -1,4 +1,4 @@
-<%= if @game.game_over do %>
+<%= if @live_action in [:game_over] do %>
   <%= live_modal @socket, InvadersWeb.ScoreLive.FormComponent,
     id: :new,
     action: @live_action,

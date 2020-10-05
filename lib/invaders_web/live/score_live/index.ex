@@ -2,7 +2,6 @@ defmodule InvadersWeb.ScoreLive.Index do
   use InvadersWeb, :live_view
 
   alias Invaders.Scoreboard
-  alias Invaders.Scoreboard.Score
 
   @impl true
   def mount(_params, _session, socket) do
