@@ -23,7 +23,8 @@ defmodule InvadersWeb.ScoreLive.FormComponent do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("save", %{"score" => score_params}, socket) do
+  def handle_event("save", %{"score" => score_params} = something, socket) do
+    IO.inspect(something)
     save_score(socket, socket.assigns.action, score_params)
   end
 

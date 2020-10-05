@@ -12,12 +12,12 @@ defmodule Invaders.Game do
   @ship_speed 8
   @enemy_speed 1
   @enemies_down_shift 5
-  @layers 4
-  @ships_per_layer 11
+  @layers 1
+  @ships_per_layer 1
 
   defstruct started: false,
             pid: nil,
-            game_over: true,
+            game_over: false,
             win: false,
             t: 0,
             width: @width,

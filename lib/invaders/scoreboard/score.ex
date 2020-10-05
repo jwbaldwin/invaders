@@ -11,10 +11,16 @@ defmodule Invaders.Scoreboard.Score do
 
   @doc false
   def changeset(score, attrs) do
-    score
-    |> cast(attrs, [:name, :score])
-    |> validate_length(:name, is: 3)
-    |> validate_format(:name, ~r/[a-zA-Z]+/, message: "Only letters are allowed. ")
-    |> validate_required([:name, :score])
+    IO.puts("getting")
+
+    score =
+      score
+      |> cast(attrs, [:name, :score])
+      |> validate_length(:name, is: 3)
+      |> validate_format(:name, ~r/[a-zA-Z]+/, message: "Only letters are allowed. ")
+      |> validate_required([:name, :score])
+
+    IO.inspect(attrs)
+    IO.inspect(score)
   end
 end

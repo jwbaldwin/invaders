@@ -33,13 +33,11 @@ defmodule InvadersWeb.GameLive do
   end
 
   defp apply_action(socket, :index, _params) do
-    IO.puts("index bou")
     socket
   end
 
   defp apply_action(socket, :game_over, _params) do
-    IO.puts("game_over bou")
-    assign(socket, :page_title, "Show Page")
+    assign(socket, :score, %Score{score: socket.assigns.game.score, name: nil})
   end
 
   @impl true
@@ -47,10 +45,8 @@ defmodule InvadersWeb.GameLive do
     game = socket.assigns[:game] |> Invaders.Game.update()
 
     if game.game_over do
-      IO.puts("game_ova")
-      {:noreply, push_patch(socket, to: Routes.game_path(socket, :game_over), replace: true)}
+      {:noreply, push_patch(socket, to: Routes.game_path(socket, :game_over))}
     else
-      IO.puts("cont")
       :timer.send_after(50, self(), :update)
       {:noreply, assign(socket, :game, game)}
     end
