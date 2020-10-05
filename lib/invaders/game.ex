@@ -12,8 +12,8 @@ defmodule Invaders.Game do
   @ship_speed 8
   @enemy_speed 1
   @enemies_down_shift 5
-  @layers 1
-  @ships_per_layer 1
+  @layers 4
+  @ships_per_layer 11
 
   defstruct started: false,
             pid: nil,

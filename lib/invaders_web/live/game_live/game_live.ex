@@ -24,11 +24,7 @@ defmodule InvadersWeb.GameLive do
   end
 
   @impl true
-  def handle_params(params, uri, socket) do
-    IO.puts("params")
-    IO.inspect(params)
-    IO.inspect(uri)
-    IO.inspect(socket.assigns.live_action)
+  def handle_params(params, _uri, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -37,7 +33,7 @@ defmodule InvadersWeb.GameLive do
   end
 
   defp apply_action(socket, :game_over, _params) do
-    assign(socket, :score, %Score{score: socket.assigns.game.score, name: nil})
+    assign(socket, :score, %Score{score: socket.assigns.game.score})
   end
 
   @impl true

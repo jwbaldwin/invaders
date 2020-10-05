@@ -23,14 +23,13 @@ defmodule InvadersWeb.ScoreLive.FormComponent do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("save", %{"score" => score_params} = something, socket) do
-    IO.inspect(something)
+  def handle_event("save", %{"score" => score_params}, socket) do
+    score_params = Map.put(score_params, "score", socket.assigns.score.score)
+    IO.inspect(score_params)
     save_score(socket, socket.assigns.action, score_params)
   end
 
-  defp save_score(socket, :new, score_params) do
-    IO.inspect(score_params)
-
+  defp save_score(socket, :game_over, score_params) do
     case Scoreboard.create_score(score_params) do
       {:ok, _score} ->
         {:noreply,
