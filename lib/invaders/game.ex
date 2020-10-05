@@ -10,7 +10,7 @@ defmodule Invaders.Game do
   @middle div(@width, 2)
   @missile_speed 30
   @ship_speed 8
-  @enemy_speed 1
+  @enemy_speed 2
   @enemies_down_shift 5
   @layers 4
   @ships_per_layer 11
@@ -214,6 +214,7 @@ defmodule Invaders.Game do
       game
       |> Map.replace!(:enemies, enemies)
       |> Map.replace!(:enemies_direction, direction)
+      |> player_loses?(enemies)
     end
   end
 
@@ -255,6 +256,15 @@ defmodule Invaders.Game do
 
   defp reverse(:left), do: :right
   defp reverse(:right), do: :left
+
+  defp player_loses?(game, enemies) do
+    {_x, y} = Enum.max(enemies)
+
+    cond do
+      y >= @height -> Map.replace!(game, :game_over, true)
+      true -> game
+    end
+  end
 
   def move_missiles(%{ship_missiles: missiles} = game) do
     missiles =
