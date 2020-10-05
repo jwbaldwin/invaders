@@ -3,7 +3,10 @@ defmodule InvadersWeb.HomeLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :music, false)}
+    {:ok,
+     socket
+     |> assign(:music, false)
+     |> assign(:high_score, fetch_high_score())}
   end
 
   @impl true
@@ -29,7 +32,7 @@ defmodule InvadersWeb.HomeLive do
       </div>
       <div class="flex justify-around text-neon-green">
         <div class="my-1 text-2xl font-black leading-none uppercase">Hi-Score</div>
-        <div class="my-1 text-2xl font-black leading-none uppercase"><%= Invaders.Scoreboard.get_high_score!().score %></div>
+        <div class="my-1 text-2xl font-black leading-none uppercase"><%= @high_score %></div>
       </div>
       <div class="relative flex justify-around w-full h-36 parent">
         <div class="-my-4 slant text-neon-orange">
@@ -83,5 +86,12 @@ defmodule InvadersWeb.HomeLive do
   @impl true
   def handle_event("new", _params, socket) do
     {:noreply, push_redirect(socket, to: "/game")}
+  end
+
+  defp fetch_high_score() do
+    case Invaders.Scoreboard.get_high_score!() do
+      %Invaders.Scoreboard.Score{score: score} -> score
+      _ -> 0
+    end
   end
 end

@@ -41,7 +41,7 @@ defmodule Invaders.Scoreboard do
     Score
     |> order_by(desc: :score)
     |> limit(1)
-    |> Repo.one!()
+    |> Repo.one()
   end
 
   @doc """
