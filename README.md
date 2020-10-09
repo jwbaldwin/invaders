@@ -1,6 +1,6 @@
 # Invaders
 
-**Demo: [invaders.jwbaldwin.com](invaders.jwbaldwin.com)**
+**Demo: [invaders.jwbaldwin.com](https://invaders.jwbaldwin.com)**
 
 To start your Phoenix server:
 
