@@ -55,12 +55,15 @@ defmodule InvadersWeb.HomeLive do
         <span class="m-2 cursor-pointer hover:text-neon-yellow focus:text-neon-yellow">
           <%= live_redirect "Scoreboard", to: Routes.score_index_path(@socket, :index), class: "focus:text-neon-green" %>
         </span>
+        <span class="m-2 cursor-pointer hover:text-neon-yellow focus:text-neon-yellow">
+          <%= live_redirect "About", to: Routes.about_index_path(@socket, :index), class: "focus:text-blue-500" %>
+        </span>
       </div>
       <div class="absolute flex justify-center w-full text-white bottom-10">
         <span>Made by
         <a class="hover:text-neon-green hover:underline" href="https://www.jwbaldwin.com">jwbaldwin</a>.
         Find me at
-        <a class="hover:text-neon-yellow hover:underline" href="https://twitter.com/jwbaldwin_">Twitter</a> -
+        <a class="hover:text-neon-yellow hover:underline" href="https://twitter.com/jwbaldwin_">Twitter</a> or
         <a class="hover:text-neon-orange hover:underline" href="https://github.com/jwbaldwin">Github</a>
       </div>
     </div>

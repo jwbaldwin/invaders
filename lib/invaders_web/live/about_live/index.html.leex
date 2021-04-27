@@ -1,0 +1,19 @@
+<div class="flex flex-col w-screen h-screen text-center bg-black" style="background-image: url(<%= Routes.static_path(@socket, "/images/black.png") %> ); background-repeat: repeat;">
+  <div class="flex">
+    <span class="flex-1 my-auto text-xl font-bold text-white transform hover:scale-110">
+      <%= live_redirect to: Routes.home_path(@socket, :index) do %>&#8592; Home<% end %>
+    </span>
+    <h1 class="m-8 text-4xl font-extrabold text-white">Why did I build this?</h1>
+    <div class="flex-1">    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <div class="flex mx-auto mt-6 prose prose-lg text-gray-200 prose-indigo">
+      I was curious how much I could really push Phoenix LiveView.
+
+      There is not a single line of javascript on this website. Not even the *pew* *pew* noises, that's actually Phoenix LiveView toggling a boolean each game "tick". This just removes the 'audio' element and then puts it back on the page.
+    </div>
+    <div class="flex mx-auto mt-6 prose prose-lg text-gray-200 prose-indigo">
+      Curisoity satisfied, I might come back to make it a real game, with levels etc.
+    </div>
+  </div>
+</div>

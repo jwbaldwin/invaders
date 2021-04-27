@@ -21,6 +21,7 @@ defmodule InvadersWeb.Router do
     live "/game", GameLive, :index
     live "/game/over", GameLive, :game_over
     live "/scores", ScoreLive.Index, :index
+    live "/about", AboutLive.Index, :index
 
     live "/scores/:id", ScoreLive.Show, :show
   end
