@@ -4,16 +4,32 @@
       <%= live_redirect to: Routes.home_path(@socket, :index) do %>&#8592; Home<% end %>
     </span>
     <h1 class="m-8 text-4xl font-extrabold text-white">Why did I build this?</h1>
-    <div class="flex-1">    </div>
+    <div class="flex-1"></div>
   </div>
-  <div class="overflow-x-auto">
-    <div class="flex mx-auto mt-6 prose prose-lg text-gray-200 prose-indigo">
-      I was curious how much I could really push Phoenix LiveView.
-
-      There is not a single line of javascript on this website. Not even the *pew* *pew* noises, that's actually Phoenix LiveView toggling a boolean each game "tick". This just removes the 'audio' element and then puts it back on the page.
+  <div class="mx-auto mt-6 space-y-4 prose prose-2xl text-gray-200 prose-indigo">
+    <div>
+      I was curious how much I could really push Phoenix LiveView. So I tried pushing an *absurd* amount of data over the websocket.
+      <span class="text-neon-yellow">The game operates on a 50ms "tick", or interval.</span>
     </div>
-    <div class="flex mx-auto mt-6 prose prose-lg text-gray-200 prose-indigo">
-      Curisoity satisfied, I might come back to make it a real game, with levels etc.
+    <div>
+      <span class="text-neon-orange">Everything is handled on the server side</span>, and then sent over the socket. For example, if you use the browser inspect tools while playing
+      a game, you'll notice that the "top", "left", "right" values are dynamically placing each enemy ship at the right location. Similarly, even the
+      missile collisions are calculated in a genserver, then the collided ship is replaced with an explosion image for a single game tick, and then removed.
+    </div>
+    <div>
+      <span class="text-neon-green">There is not a single line of javascript on this website.</span>
+      Not even the *pew* *pew* noises, that's actually Phoenix LiveView toggling a boolean each game "tick". This just removes the 'audio' element and then puts it back on the page.
+    </div>
+    <div class="mt-4">
+      What was the end result?
+      <span class="text-neon-green">
+        It handled it better than I ever expected.
+      </span>
+      Take a look for yourself, watch how much data is pushed over the socket. It's awesome!
+      Curiosity satisfied, I might come back to make it a real game, with levels etc.
+    </div>
+    <div>
+      - James
     </div>
   </div>
 </div>
